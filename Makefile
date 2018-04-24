@@ -1,4 +1,4 @@
-OMP  = YES
+OMP  = NO
 EXE  = sopt
 ifeq ($(ENV), GCC)
      CC        = gcc-7
@@ -56,6 +56,28 @@ ifeq ($(ENV), ICC)
      CFLAGS += -O3 -xSSSE3 -axAVX,SSE4.2,SSE4.1,SSSE3,SSE3,SSE2 \
               -Wall -DWITHOUT_MPI -D__ArrayExtensions -DNDEBUG \
               -fomit-frame-pointer \
+	      -I$(FFT_DIR)/include -I$(HDF_DIR)/include -I$(SILO_DIR)/include
+     CXXFLAGS = -std=c++11 $(CFLAGS)
+     LINKS = $(FFTLINKS) -L$(SILO_DIR)/lib -L$(HDF_DIR)/lib -lsiloh5 -lhdf5_hl -lhdf5 -lm
+endif
+ifeq ($(ENV), KUDPC)
+     LDIR      = /LARGE0/gr10331
+     CC        = icc
+     CXX       = icpc
+     FFT_DIR   = /opt/app/fftw/3.3.5/intel-17.0-impi-2017.1
+     HDF_DIR   = /opt/app/hdf5/1.8.17/intel-17.0
+     SILO_DIR  = $(LDIR)/app/silo/4.10.2/intel-17.0
+
+     ifeq ($(OMP), YES)
+         EXE      = popt
+         CFLAGS   = -qopenmp -parallel 
+         FFTLINKS = -L$(FFT_DIR)/lib -lfftw3_omp -lfftw3
+     else
+         FFTLINKS = -L$(FFT_DIR)/lib -lfftw3
+     endif
+     CFLAGS += -xavx2 -O3 \
+              -Wall -D__ArrayExtensions -DNDEBUG \
+              -fomit-frame-pointer\
 	      -I$(FFT_DIR)/include -I$(HDF_DIR)/include -I$(SILO_DIR)/include
      CXXFLAGS = -std=c++11 $(CFLAGS)
      LINKS = $(FFTLINKS) -L$(SILO_DIR)/lib -L$(HDF_DIR)/lib -lsiloh5 -lhdf5_hl -lhdf5 -lm
