@@ -211,19 +211,20 @@ int main(int arg, char** argv){
   const int FRAMES = 100;
   const int GTS    = 20;
   init_threads();
-  initialize(8, 8, 8);
-  
+  initialize(7, 7, 7);
+
+  const int r0     = MIN(MIN(Nx,Ny), Nz)/8;  
   array3<double> rho(Nx+2,Ny+2,Nz+2,align);
   rho = 0.0;
 #pragma omp parallel for
   for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) for(auto k = 1; k <= Nz; k++)
-								if(sqrt(SQ(i-Nx/2) + SQ(j-Ny/2) + SQ(k-Nz/2)) < 25) rho(i,j,k) = 1.0;
+								if(sqrt(SQ(i-Nx/2) + SQ(j-Ny/2) + SQ(k-Nz/2)) < r0) rho(i,j,k) = 1.0;
 #pragma omp parallel for
   for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) for(auto k = 1; k <= Nz; k++)
-								if(ABS(i-Nx/6) < 25 && ABS(j-Ny/6) < 25 && ABS(k-Nz/6) < 25) rho(i,j,k) += 1.0;
+								if(ABS(i-Nx/6) < r0 && ABS(j-Ny/6) < r0 && ABS(k-Nz/6) < r0) rho(i,j,k) += 1.0;
 #pragma omp parallel for
   for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) for(auto k = 1; k <= Nz; k++)
-								if(ABS(i-5*Nx/6) < 25 && ABS(j-5*Ny/6) < 25 && ABS(k-5*Nz/6) < 25) rho(i,j,k) += 1.0;
+								if(ABS(i-5*Nx/6) < r0 && ABS(j-5*Ny/6) < r0 && ABS(k-5*Nz/6) < r0) rho(i,j,k) += 1.0;
   
   double time = 0.0;
   output(time, rho);

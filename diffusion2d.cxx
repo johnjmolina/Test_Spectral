@@ -184,16 +184,17 @@ int main(int arg, char** argv){
   const int GTS    = 100;
   init_threads();
   initialize(8, 8);
-
+  
+  const int r0 = MIN(Nx,Ny)/8;
   array2<double> rho(Nx+2,Ny+2,align);
   rho = 0.0;
 
 #pragma omp parallel for
-  for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) if(sqrt(SQ(i-Nx/2) + SQ(j-Ny/2)) < 25) rho(i,j) += 1.0;
+  for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) if(sqrt(SQ(i-Nx/2) + SQ(j-Ny/2)) < r0) rho(i,j) += 1.0;
 #pragma omp parallel for
-  for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) if(ABS(i-Nx/6) < 25 && ABS(j-Ny/6) < 25) rho(i,j) += 1.0;
+  for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) if(ABS(i-Nx/6) < r0 && ABS(j-Ny/6) < r0) rho(i,j) += 1.0;
 #pragma omp parallel for
-  for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) if(ABS(i-5*Nx/6) < 25 && ABS(j-5*Ny/6) < 25) rho(i,j) += 1.0;
+  for(auto i = 1; i <= Nx; i++) for(auto j = 1; j <= Ny; j++) if(ABS(i-5*Nx/6) < r0 && ABS(j-5*Ny/6) < r0) rho(i,j) += 1.0;
   
   double time = 0.0;
   output(time, rho);
