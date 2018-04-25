@@ -6,6 +6,7 @@
 #include <silo.h>
 #include <fftw3.h>
 #include "Array.h"
+#include "utils.hxx"
 
 using Array::array1;
 using Array::array2;
@@ -32,11 +33,6 @@ array1<double> xval, yval;
 //system vars
 double dt;
 double dx;
-
-template<typename T> inline T SQ(const T &a){ return a*a ;}
-template<typename T> inline T MIN(const T &a, const T &b){ return ( a <= b ? a : b);}
-template<typename T> inline T MAX(const T &a, const T &b){ return ( a >= b ? a : b);}
-template<typename T> inline T ABS(const T &a){return ( a >= 0 ? a : -a);}
 
 inline void fft(fftw_plan &fw_plan, double* fr, Complex* fk){
   fftw_execute_dft_r2c(fw_plan, fr, reinterpret_cast<fftw_complex*>(fk));

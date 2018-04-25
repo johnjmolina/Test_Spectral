@@ -1,5 +1,5 @@
 #!/bin/bash
-#QSUB -q gr10331b
+#QSUB -q  gr10331b
 #QSUB -ug gr10331
 #QSUB -W 12:0
 #QSUB -oo std.out
@@ -15,4 +15,4 @@ cd $QSUB_WORKDIR
 set -x
 
 # automatically
-./diffusion3d.sopt
+./diffusion2d.sopt
